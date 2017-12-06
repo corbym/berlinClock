@@ -36,6 +36,6 @@ func TestGivenAClockWhenInvalidTimeIsEnteredThenClockError(testing *testing.T) {
 	for _, test := range clockParams {
 		clock, err := berlinClock.Clock(test.time)
 		assert.Empty(testing, clock)
-		assert.Errorf(testing, err, test.expected)
+		assert.EqualErrorf(testing, err, test.expected, "error was %s", "formatted")
 	}
 }
