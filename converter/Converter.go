@@ -31,7 +31,6 @@ func ConvertSingleMinutes(minutes int) (string, error) {
 	return yellowLamps + offLamps(yellowLamps, singleRowTotalLamps), nil
 }
 
-
 func ConvertFiveMinutes(minutes int) (string, error) {
 	if invalidValue(minutes, maxMins) {
 		return emptyLamps, errors.New(invalidArgumentMessage)
