@@ -1,8 +1,8 @@
-package berlinClock
+package berlinclock
 
 import (
 	"strings"
-	"berlinClock/converter"
+	"berlinclock/converter"
 	"strconv"
 	"regexp"
 	"errors"

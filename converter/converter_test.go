@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"testing"
-	"berlinClock/converter"
+	"berlinclock/converter"
 )
 
 func TestGivenInvalidMinutesThenError(testing *testing.T) {
@@ -34,7 +34,7 @@ func TestGivenInvalidMinutesThenError(testing *testing.T) {
 	for _, test := range functions {
 		minutes, err := test.function(test.invalidValue)
 		assert.Empty(testing, minutes)
-		assert.EqualError(testing, err, test.expected)
+		assert.EqualError	(testing, err, test.expected)
 	}
 }
 

@@ -1,9 +1,9 @@
-package berlinClock_test
+package berlinclock_test
 
 import (
 	"testing"
 	"github.com/stretchr/testify/assert"
-	"berlinClock"
+	"berlinclock"
 )
 
 func TestGivenAClockWhenTimeIsEnteredThenCorrectClock(testing *testing.T) {
@@ -17,7 +17,7 @@ func TestGivenAClockWhenTimeIsEnteredThenCorrectClock(testing *testing.T) {
 		{time: "11:37:01", expected: "ORROOROOOYYRYYRYOOOOYYOO"},
 	}
 	for _, test := range clockParams {
-		clock, err := berlinClock.Clock(test.time)
+		clock, err := berlinclock.Clock(test.time)
 		assert.Nil(testing, err)
 		assert.Equal(testing, test.expected, clock)
 	}
@@ -34,7 +34,7 @@ func TestGivenAClockWhenInvalidTimeIsEnteredThenClockError(testing *testing.T) {
 		{time: "11:37:99", expected: "invalid argument"},
 	}
 	for _, test := range clockParams {
-		clock, err := berlinClock.Clock(test.time)
+		clock, err := berlinclock.Clock(test.time)
 		assert.Empty(testing, clock)
 		assert.EqualErrorf(testing, err, test.expected, "error was %s", "formatted")
 	}
