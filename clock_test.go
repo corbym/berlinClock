@@ -2,8 +2,9 @@ package berlinclock_test
 
 import (
 	"testing"
-	"github.com/stretchr/testify/assert"
 	"berlinclock"
+	"gocrest/then"
+	"gocrest/is"
 )
 
 func TestGivenAClockWhenTimeIsEnteredThenCorrectClock(testing *testing.T) {
@@ -18,8 +19,10 @@ func TestGivenAClockWhenTimeIsEnteredThenCorrectClock(testing *testing.T) {
 	}
 	for _, test := range clockParams {
 		clock, err := berlinclock.Clock(test.time)
-		assert.Nil(testing, err)
-		assert.Equal(testing, test.expected, clock)
+		then.AssertThat(testing, err, is.Nil())
+		then.AssertThat(testing, clock, is.
+			EqualTo(test.expected).
+			Reasonf("time incorrect for %s", test.time))
 	}
 }
 
@@ -35,7 +38,7 @@ func TestGivenAClockWhenInvalidTimeIsEnteredThenClockError(testing *testing.T) {
 	}
 	for _, test := range clockParams {
 		clock, err := berlinclock.Clock(test.time)
-		assert.Empty(testing, clock)
-		assert.EqualErrorf(testing, err, test.expected, "error was %s", "formatted")
+		then.AssertThat(testing, clock, is.Empty())
+		then.AssertThat(testing, err, is.EqualTo(test.expected).Reasonf("error was %s", err.Error()))
 	}
 }
