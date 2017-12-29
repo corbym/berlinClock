@@ -5,7 +5,6 @@ import (
 	"berlinclock/converter"
 	"github.com/corbym/gocrest/then"
 	"github.com/corbym/gocrest/is"
-	"fmt"
 )
 
 func TestGivenInvalidMinutesThenError(testing *testing.T) {
@@ -54,7 +53,7 @@ func TestGivenAConverterWhenTimeIsEnteredThenCorrectSingleMinutesRow(testing *te
 	for _, test := range singleMinuteTests {
 		minutes, err := converter.ConvertSingleMinutes(test.minutes)
 		then.AssertThat(testing, err, is.Nil())
-		then.AssertThat(testing, minutes, is.EqualTo(test.expected).Reason(fmt.Sprintf("single minutes row %v incorrect", test.minutes)))
+		then.AssertThat(testing, minutes, is.EqualTo(test.expected).Reasonf("single minutes row %v incorrect", test.minutes))
 	}
 }
 
@@ -74,7 +73,7 @@ func TestGivenAConverterWhenTimeIsEnteredThenCorrectFiveMinutesRow(testing *test
 	for _, test := range fiveMinuteTests {
 		minutes, err := converter.ConvertFiveMinutes(test.minutes)
 		then.AssertThat(testing, err, is.Nil())
-		then.AssertThat(testing, minutes, is.EqualTo(test.expected).Reason(fmt.Sprintf("five minute row %v incorrect", test.minutes)))
+		then.AssertThat(testing, minutes, is.EqualTo(test.expected).Reasonf("five minute row %v incorrect", test.minutes))
 	}
 }
 func TestGivenAConverterWhenTimeIsEnteredThenCorrectSingleHourRow(testing *testing.T) {
@@ -94,7 +93,7 @@ func TestGivenAConverterWhenTimeIsEnteredThenCorrectSingleHourRow(testing *testi
 		then.AssertThat(testing, err, is.Nil())
 		then.AssertThat(testing, hours, is.
 			EqualTo(test.expected).
-			Reason(fmt.Sprintf("single hours row %v incorrect", test.hours)),
+			Reasonf("single hours row %v incorrect", test.hours),
 		)
 	}
 }
@@ -114,7 +113,7 @@ func TestGivenAConverterWhenTimeIsEnteredThenCorrectFiveHourRow(testing *testing
 	for _, test := range fiveHoursParams {
 		hours, err := converter.ConvertFiveHours(test.hours)
 		then.AssertThat(testing, err, is.Nil())
-		then.AssertThat(testing, hours, is.EqualTo(test.expected).Reason(fmt.Sprintf("five hours row %v incorrect", test.hours)))
+		then.AssertThat(testing, hours, is.EqualTo(test.expected).Reasonf("five hours row %v incorrect", test.hours))
 	}
 }
 
@@ -134,6 +133,6 @@ func TestGivenAConverterWhenTimeIsEnteredThenCorrectSecondsRow(testing *testing.
 		seconds, err := converter.ConvertSecondsRow(test.seconds)
 		then.AssertThat(testing, err, is.Nil())
 		then.AssertThat(testing, seconds, is.EqualTo(test.expected).
-			Reason(fmt.Sprintf("seconds row %v incorrect", test.seconds)))
+			Reasonf("seconds row %v incorrect", test.seconds))
 	}
 }
