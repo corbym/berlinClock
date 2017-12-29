@@ -38,7 +38,7 @@ func TestGivenAClockWhenInvalidTimeIsEnteredThenClockError(testing *testing.T) {
 	}
 	for _, test := range clockParams {
 		clock, err := berlinclock.Clock(test.time)
-		then.AssertThat(testing, clock, is.Empty())
-		then.AssertThat(testing, err, is.EqualTo(test.expected).Reasonf("error was %s", err.Error()))
+		then.AssertThat(testing, clock, is.Empty().Reasonf("clock was not empty for given time %s", test.time))
+		then.AssertThat(testing, err.Error(), is.EqualTo(test.expected).Reasonf("incorrect error for given time %s", test.time))
 	}
 }
