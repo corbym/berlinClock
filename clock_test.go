@@ -2,12 +2,29 @@ package berlinclock_test
 
 import (
 	"testing"
-	"berlinclock"
-	"gocrest/then"
-	"gocrest/is"
+	"github.com/corbym/berlinclock"
+	. "github.com/corbym/gocrest/then"
+	"github.com/corbym/gocrest/is"
+	"github.com/corbym/gogiven"
+	"os"
+	"github.com/corbym/gogiven/base"
+	"github.com/corbym/gogiven/testdata"
+	"github.com/corbym/htmlspec"
 )
 
-func TestGivenAClockWhenTimeIsEnteredThenCorrectClock(testing *testing.T) {
+func TestMain(testmain *testing.M) {
+	gogiven.Generator = htmlspec.NewTestOutputGenerator()
+	runOutput := testmain.Run()
+	gogiven.GenerateTestOutput()
+	os.Exit(runOutput)
+}
+
+type output struct {
+	berlinClockOutput string
+	errorOutput       error
+}
+
+func TestGivenAClockWhenTimeIsEnteredThenCorrectClock(t *testing.T) {
 	var clockParams = []struct {
 		time     string // input
 		expected string // expected result
@@ -18,15 +35,43 @@ func TestGivenAClockWhenTimeIsEnteredThenCorrectClock(testing *testing.T) {
 		{time: "11:37:01", expected: "ORROOROOOYYRYYRYOOOOYYOO"},
 	}
 	for _, test := range clockParams {
-		clock, err := berlinclock.Clock(test.time)
-		then.AssertThat(testing, err, is.Nil())
-		then.AssertThat(testing, clock, is.
-			EqualTo(test.expected).
-			Reasonf("time incorrect for %s", test.time))
+		t.Run(test.time, func(weAreTesting *testing.T) {
+			outputs := &output{}
+			gogiven.Given(weAreTesting, clockParametersUnder(test)).
+
+				When(weAskTheClockForIts(test, outputs)).
+
+				Then(func(theTest base.TestingT, actual testdata.CapturedIO, givens testdata.InterestingGivens) {
+
+				AssertThat(theTest, outputs.errorOutput, is.Nil())
+				AssertThat(theTest, outputs.berlinClockOutput, is.EqualTo(test.expected).Reasonf("time incorrect for %s", test.time))
+			})
+		})
 	}
 }
 
-func TestGivenAClockWhenInvalidTimeIsEnteredThenClockError(testing *testing.T) {
+type testData struct {
+	time     string
+	expected string
+}
+
+func clockParametersUnder(testData testData) (givens base.GivenData) {
+	return func(givens testdata.InterestingGivens) {
+		givens["time"] = testData.time
+		givens["expected"] = testData.expected
+	}
+}
+func weAskTheClockForIts(test testData, out *output) (givens func(capturedIO testdata.CapturedIO, givens testdata.InterestingGivens)) {
+	givens = func(capturedIO testdata.CapturedIO, givens testdata.InterestingGivens) {
+		out.berlinClockOutput, out.errorOutput = berlinclock.Clock(test.time)
+		capturedIO["output"] = out.berlinClockOutput
+		capturedIO["error"] = out.errorOutput
+	}
+	return
+
+}
+
+func TestGivenAClockWhenInvalidTimeIsEnteredThenClockError(t *testing.T) {
 	var clockParams = []struct {
 		time     string // input
 		expected string // expected result
@@ -37,8 +82,17 @@ func TestGivenAClockWhenInvalidTimeIsEnteredThenClockError(testing *testing.T) {
 		{time: "11:37:99", expected: "invalid argument"},
 	}
 	for _, test := range clockParams {
-		clock, err := berlinclock.Clock(test.time)
-		then.AssertThat(testing, clock, is.Empty().Reasonf("clock was not empty for given time %s", test.time))
-		then.AssertThat(testing, err.Error(), is.EqualTo(test.expected).Reasonf("incorrect error for given time %s", test.time))
+		t.Run(test.time, func(weAreTesting *testing.T) {
+			out := &output{}
+			gogiven.Given(weAreTesting, clockParametersUnder(test)).
+
+				When(weAskTheClockForIts(test, out)).
+
+				Then(func(testingT base.TestingT, actual testdata.CapturedIO, givens testdata.InterestingGivens) {
+				AssertThat(weAreTesting, out.berlinClockOutput, is.Empty().Reasonf("clock was not empty for given time %s", test.time))
+				AssertThat(weAreTesting, out.errorOutput.Error(), is.EqualTo(test.expected).Reasonf("incorrect error for given time %s", test.time))
+			})
+
+		})
 	}
 }

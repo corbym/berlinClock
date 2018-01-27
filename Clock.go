@@ -2,7 +2,7 @@ package berlinclock
 
 import (
 	"strings"
-	"berlinclock/converter"
+	"github.com/corbym/berlinclock/converter"
 	"strconv"
 	"regexp"
 	"errors"
